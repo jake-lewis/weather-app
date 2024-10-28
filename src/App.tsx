@@ -1,66 +1,28 @@
+import { useState } from "react";
 import "./App.css"
-import { Counter } from "./features/counter/Counter"
-import { Quotes } from "./features/quotes/Quotes"
-import logo from "./logo.svg"
+import { useLazyGetLatLongQuery } from "./features/location/locationApi";
 
 const App = () => {
+  const [location, setLocation] = useState<string>();
+  const [trigger, result] = useLazyGetLatLongQuery();
+
+  const placeholderText = "Enter a location...";
+  
+  const handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && location !== undefined) {
+        trigger(location);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <Quotes />
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://reselect.js.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Reselect
-          </a>
-        </span>
-      </header>
+      { result.isUninitialized &&
+        <>
+          <header>5-day Forecast</header><search>
+            <input aria-placeholder={placeholderText} placeholder={placeholderText} onChange={(e) => setLocation(e.target.value)} onKeyDown={handleSubmit} />
+          </search>
+        </>
+      }
     </div>
   )
 }

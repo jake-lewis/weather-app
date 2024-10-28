@@ -3,8 +3,7 @@ import { render } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import type { PropsWithChildren, ReactElement } from "react"
 import { Provider } from "react-redux"
-import type { AppStore, RootState } from "../app/store"
-import { makeStore } from "../app/store"
+import { setupStore, type AppStore, type RootState } from "../app/store"
 
 /**
  * This type extends the default options for
@@ -28,7 +27,7 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {
    * tests from a global store state. The custom store should be configured
    * to match the structure and middleware of the store used by the application.
    *
-   * @default makeStore(preloadedState)
+   * @default setupStore(preloadedState)
    */
   store?: AppStore
 }
@@ -48,7 +47,7 @@ export const renderWithProviders = (
   const {
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
-    store = makeStore(preloadedState),
+    store = setupStore(preloadedState),
     ...renderOptions
   } = extendedRenderOptions
 
