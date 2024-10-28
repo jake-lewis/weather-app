@@ -11,7 +11,12 @@ export const locationApi = createApi({
     endpoints: (builder) => ({
         getLatLong: builder.query<LatLong, string>({
             query: (location) => `search/?name=${location}&count=1`,
-            // transformResponse: (response: { data: any }) => ({ latitude: response.data.latitude, longitude: response.data.longitude })
+
+            transformResponse: (response: { results: any[] }) => {
+                if (response.results === undefined) throw new Error("Location not recognised, try a name or postcode")
+                const data = response.results[0];
+                return ({ latitude: data.latitude, longitude: data.longitude });
+            }
         })
     }),
 })

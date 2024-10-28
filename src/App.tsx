@@ -16,11 +16,17 @@ const App = () => {
 
   return (
     <div className="App">
-      { result.isUninitialized &&
+      { (result.isUninitialized || result.isError) &&
         <>
           <header>5-day Forecast</header><search>
-            <input aria-placeholder={placeholderText} placeholder={placeholderText} onChange={(e) => setLocation(e.target.value)} onKeyDown={handleSubmit} />
+            <input id="location" aria-placeholder={placeholderText} placeholder={placeholderText} onChange={(e) => setLocation(e.target.value)} onKeyDown={handleSubmit} />
+            {result.isError && <label htmlFor="location">Could not find location "{location}", try a name or a postcode</label>}
           </search>
+        </>
+      }
+      { result.isSuccess && 
+        <>
+          {result.currentData?.latitude}, {result.currentData?.longitude}
         </>
       }
     </div>
